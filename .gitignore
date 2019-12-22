@@ -1,2 +1,4 @@
 /.ipynb_checkpoints/
 /data
+/model_output
+requirements.txt
