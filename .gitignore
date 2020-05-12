@@ -1,4 +1,5 @@
 /.ipynb_checkpoints/
 /data
 /model_output
+/flask_app/config.py
 requirements.txt

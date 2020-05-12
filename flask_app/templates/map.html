@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"> -->
+</head>
+
+<body>
+
+<div>
+
+  {% if city_input %}
+    <table>
+      <tr>
+        <td>{{ state_name }}</td>
+        <td>{{ county_name }}</td>
+        <td>{{ county_count }}</td>
+        <td>{{ city_input }}</td>
+        <td>{{ geo_count }}</td>
+      </tr>
+    </table>
+  {% else %}
+    HEY!
+  {% endif %}
+
+  <img src={{ img }} alt="my plot">
+
+</div>
+
+</body>
+
+</html>
