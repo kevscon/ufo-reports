@@ -4,6 +4,7 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import json
 import time
+from config import Config
 
 app = Flask(__name__)
 # configuration settings
@@ -55,13 +56,13 @@ def input():
             # get state FIPS code
             state_fips = str(state_codes[state_input])
             # get county FIPS code
-            county_fips = geo_counts.loc[geolocation, 'county_id']
+            county_fips = str(geo_counts.loc[geolocation, 'county_id']).zfill(5)
             # county name
-            county_name = county_shapes.loc[str(county_fips), 'NAME']
+            county_name = county_shapes.loc[county_fips, 'NAME']
             # geolocation report counts
             geo_count = geo_counts.loc[geolocation, 'report_counts']
             # county report counts
-            county_count = county_shapes.loc[str(county_fips), 'report_counts']
+            county_count = county_shapes.loc[county_fips, 'report_counts']
             # geolocation coordinates
             latitude = [geo_counts.loc[geolocation, 'latitude']]
             longitude = [geo_counts.loc[geolocation, 'longitude']]
