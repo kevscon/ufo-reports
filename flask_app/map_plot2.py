@@ -10,7 +10,7 @@ from matplotlib.figure import Figure
 
 app = Flask(__name__)
 
-state_fips = '27'
+state_fips = '25'
 
 # load state code dictionary
 with open('data/state_codes.json', 'r') as infile:

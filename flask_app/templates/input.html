@@ -5,18 +5,32 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"> -->
+  <link rel="icon" href="static/img/saucer.png">
+
+  <style>
+    /* error message */
+    .error {
+      color: #B22222;
+    }
+  </style>
 </head>
 
 <body>
 
 <div>
 
-  <!-- flash message for invalid geolocation input -->
-  {% with messages = get_flashed_messages() %}
-    {% for message in get_flashed_messages() %}
-      {{ message }}
-    {% endfor %}
-  {% endwith %}
+  <!-- instructions -->
+  Select state from dropdown and enter an <b>incorporated</b> city location in the text box. Push the "See State Map" button to see a choropleth map for selected state.
+  These choropleth maps shows the number of sightings expressed in red for each county. The redder the county, the more sightings. The national choropleth map is shown below.
+
+  <div class="error">
+    <!-- flash message for invalid geolocation input -->
+    {% with messages = get_flashed_messages() %}
+      {% for message in get_flashed_messages() %}
+        {{ message }}
+      {% endfor %}
+    {% endwith %}
+  </div>
 
   <form action="/" method="POST">
     <!-- dropdown menu for state input -->
@@ -28,8 +42,12 @@
     <!-- textbox for city input -->
     <input type="text" name="city_input">
     <!-- submit button -->
-    <input type="submit" value="See Map">
+    <input type="submit" value="See State Map">
   </form>
+
+  <h2>National Choropleth Map</h2>
+  <!-- choropleth plot -->
+  <img src="static/img/us_map.png" alt="us plot">
 
 </div>
 

@@ -5,27 +5,64 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"> -->
+  <link rel="icon" href="static/img/saucer.png">
+  <style>
+  table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 80%;
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  </style>
 </head>
 
 <body>
 
 <div>
 
-  {% if city_input %}
-    <table>
-      <tr>
-        <td>{{ state_name }}</td>
-        <td>{{ county_name }}</td>
-        <td>{{ county_count }}</td>
-        <td>{{ city_input }}</td>
-        <td>{{ geo_count }}</td>
-      </tr>
-    </table>
-  {% else %}
-    HEY!
-  {% endif %}
+  <!-- input and sighting count table -->
+  <h2>Sighting Summary</h2>
+    {% if city_input %}
+      <table>
+        <tr>
+          <td>State Code</td>
+          <td>State Sightings</td>
+          <td>County Name</td>
+          <td>County Sightings</td>
+          <td>City Name</td>
+          <td>City Sightings</td>
+        </tr>
+        <tr>
+          <td>{{ state_name }}</td>
+          <td>{{ state_count }}</td>
+          <td>{{ county_name }}</td>
+          <td>{{ county_count }}</td>
+          <td>{{ city_input }}</td>
+          <td>{{ geo_count }}</td>
+        </tr>
+      </table>
+    {% else %}
+      ERROR!
+    {% endif %}
 
-  <img src={{ img }} alt="my plot">
+
+  <p>
+    <!-- home button -->
+    <a href = {{ url_for('input') }}>Restart</a>
+  </p>
+
+  <h2>State Choropleth Map</h2>
+  <!-- choropleth plot -->
+  <img src="/plot.png" alt="state plot">
 
 </div>
 

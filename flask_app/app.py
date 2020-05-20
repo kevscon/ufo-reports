@@ -1,10 +1,13 @@
-from flask import Flask, redirect, render_template, request, flash, url_for, Response
+from flask import Flask, redirect, render_template, request, flash, url_for, Response, make_response
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import json
 import time
 from config import Config
+import io
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 app = Flask(__name__)
 # configuration settings
@@ -37,7 +40,7 @@ def state_plot(geo_df, state_fips, geometry):
     # geolocation mark
     gpd.GeoDataFrame(geometry=geometry).plot(ax=ax, color='green', markersize=200, marker="*")
     ax.axis('off')
-    fig.savefig('static/img/state_map.png')
+    fig.savefig('static/img/state_map.png', bbox_inches='tight')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -49,7 +52,7 @@ def input():
         # state input from input.html
         state_input = request.form['state_input']
         # city input from input.html
-        city_input = request.form['city_input'].strip().capitalize()
+        city_input = request.form['city_input'].strip().title()
         geolocation = city_input + ', ' + state_input
         # validate geolocation
         if geolocation in geo_counts.index:
@@ -60,9 +63,11 @@ def input():
             # county name
             county_name = county_shapes.loc[county_fips, 'NAME']
             # geolocation report counts
-            geo_count = geo_counts.loc[geolocation, 'report_counts']
+            geo_count = int(geo_counts.loc[geolocation, 'report_counts'])
             # county report counts
-            county_count = county_shapes.loc[county_fips, 'report_counts']
+            county_count = int(county_shapes.loc[county_fips, 'report_counts'])
+            # state report counts
+            state_count = int(county_shapes[county_shapes['STATEFP'] == state_fips]['report_counts'].sum())
             # geolocation coordinates
             latitude = [geo_counts.loc[geolocation, 'latitude']]
             longitude = [geo_counts.loc[geolocation, 'longitude']]
@@ -74,6 +79,7 @@ def input():
             return render_template(
                 'map.html',
                 state_name=state_input,
+                state_count=state_count,
                 county_name=county_name,
                 county_count=county_count,
                 city_input=city_input,
@@ -85,6 +91,31 @@ def input():
             return redirect('/')
     else:
         return render_template('input.html', states=states)
+
+
+@app.route('/plot.png')
+def plot():
+
+    fig, ax = plt.subplots(1, figsize=(20, 12))
+    # choropleth for state by county
+    county_shapes[county_shapes['STATEFP'] == state_fips].plot(
+        ax=ax,
+        column='report_counts',
+        cmap='Reds',
+        linewidth=0.5,
+        edgecolor='0.1'
+    )
+    # geolocation mark
+    gpd.GeoDataFrame(geometry=geometry).plot(ax=ax, color='green', markersize=200, marker="*")
+    ax.axis('off')
+    fig.savefig('static/img/state_map.png')
+    # plt.show()
+    canvas = FigureCanvas(fig)
+    output = io.BytesIO()
+    canvas.print_png(output)
+    response = make_response(output.getvalue())
+    response.mimetype = 'image/png'
+    return response
 
 
 if __name__ == "__main__":
