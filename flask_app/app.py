@@ -1,13 +1,14 @@
+# package imports
 from flask import Flask, redirect, render_template, request, flash, url_for, Response, make_response
 import pandas as pd
 import geopandas as gpd
-import matplotlib.pyplot as plt
-import json
-import time
 from config import Config
-import io
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+# internal imports?
+import json
+import io
 
 app = Flask(__name__)
 # configuration settings
